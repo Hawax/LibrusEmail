@@ -254,8 +254,9 @@ def main(check):
 
     except:
         web_driver.close()
-        print(
-            'Najprawdopodbniej coś poszło nie tak i strona się nie załadowała lub przekroczyłeś limit zapytań do strony więc czekamy chwilkę i próbujemy od nowa')
+         print(
+            'Najprawdopodbniej coś poszło nie tak i strona się nie załadowała lub przekroczyłeś limit '
+            'zapytań do strony więc czekamy chwilkę i próbujemy od nowa')
         time.sleep(30)
         return main(check)
 
