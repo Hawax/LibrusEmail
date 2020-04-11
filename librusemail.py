@@ -4,23 +4,31 @@ from selenium.webdriver.common.keys import Keys
 import time
 import sys
 import os
-
+import sys
+import msvcrt
+import getpass_ak
+from cryptography.fernet import Fernet
 
 def save_creds_and_read():
     """Zapisuje po prostu haslo i login jesli juz to wczesniej zrobil odczytuje je
     :return 2 strings
     """
+    haslo_do_szyfrowania = "MqD3GL8lYxBSCEz07Is9997maipFOHDtwQSYtLryOFU="    
+    f = Fernet(haslo_do_szyfrowania)
     try:
-        with open("login_i_hasło.txt", 'r+') as file:
+        with open("login_i_hasło.txt", 'r') as file:
             login, haslo = file.readlines()
-            return login, haslo
+            haslo = f.decrypt(haslo.encode('utf-8'))
+            return login, haslo.decode('utf-8')
     except FileNotFoundError:
         login = input('Login librus: ')
-        haslo = input('Haslo librus: ')
+        haslo = (getpass_ak.getpass('Hasło librus: '))
+        haslo = haslo.encode()
+        haslo = f.encrypt(haslo)
 
         with open("login_i_hasło.txt", 'a+') as file:
             file.write(login + '\n')
-            file.write(haslo)
+            file.write(haslo.decode('utf-8'))
         return login, haslo
 
 
@@ -30,7 +38,7 @@ def create_web_driver(headless):
      """
     chrome_options = Options()
     chrome_options.add_argument('--no-sandbox')
-    if headless == 'tak':
+    if headless:
         chrome_options.add_argument('--headless')
     chrome_options.add_argument('--disable-dev-shm-usage')
     prefs = {
@@ -47,7 +55,7 @@ def create_web_driver(headless):
     return web_inside
 
 
-def make_folder_zdjecia():
+def make_folder_for_attachments():
     execution_path = os.getcwd()
 
     if not os.path.exists(execution_path):
@@ -101,7 +109,7 @@ def get_download_links(web_driver, dirname):
                 if os.path.isfile(os.path.join(main_folder, f))
             ]  # tutaj poszukuje plików i kopjuje je do folderu, który zostanie zaraz stworzony
             print(onlyfiles)
-            make_folder_zdjecia()
+            make_folder_for_attachments()
 
             if not os.path.exists(dirname):
                 os.mkdir(dirname)
@@ -237,9 +245,9 @@ def get_answer_headless():
     """
     how_many = input("Chcesz żeby bot działał w tle?: ")
     if how_many.lower() == 'tak':
-        return how_many.lower()
+        return 1
     elif how_many.lower() == 'nie':
-        return how_many.lower()
+        return 0
     else:
         print('Musi byc tak lub nie')
         return get_answer_headless()
