@@ -8,26 +8,26 @@ import os
 
 def save_creds_and_read():
     """Zapisuje po prostu haslo i login jesli juz to wczesniej zrobil odczytuje je
-    :return 2 strings """
+    :return 2 strings
+    """
     try:
         with open("login_i_hasło.txt", 'r+') as file:
             login, haslo = file.readlines()
             return login, haslo
-    
     except FileNotFoundError:
         login = input('Login librus: ')
         haslo = input('Haslo librus: ')
-        
+
         with open("login_i_hasło.txt", 'a+') as file:
             file.write(login + '\n')
             file.write(haslo)
-            
         return login, haslo
 
 
 def create_web_driver(headless):
     """Tworzy webdrivera
-     :return webdriver"""
+     :return webdriver
+     """
     chrome_options = Options()
     chrome_options.add_argument('--no-sandbox')
     if headless == 'tak':
@@ -49,10 +49,12 @@ def create_web_driver(headless):
 
 def make_folder_zdjecia():
     execution_path = os.getcwd()
+
     if not os.path.exists(execution_path):
         os.mkdir('Zdjecia')
         print("Directory ", 'Zdjecia', " Created ")
-    else: pass
+    else:
+        pass
 
 
 def clean_dirname(dirname):
@@ -64,7 +66,8 @@ def clean_dirname(dirname):
 
 def get_download_links(web_driver, dirname):
     """Stara się pobierać załączniki, sortować je, oczywiście librus musi wszystko kompikować i są pobierane w osobnym
-    oknie z unikalnym id itp."""
+    oknie z unikalnym id itp.
+    """
 
     # lista załączników
     parentElement = web_driver.find_element_by_xpath(
@@ -187,8 +190,8 @@ def get_messages(web_driver):
             pass
 
     all = zip(linki_url, linki_url_text
-              )                             # tutaj odczytuje poczte i zapisuje załączniki(niestety
-    for url_do_poczty, zalaczniki in all:   # zapisywanie załączników działa niestety tylko w trybie bez headless)
+              )  # tutaj odczytuje poczte i zapisuje załączniki(niestety
+    for url_do_poczty, zalaczniki in all:  # zapisywanie załączników działa niestety tylko w trybie bez headless)
         web_driver.get(url_do_poczty)
         time.sleep(5)  # czeka aż się strona naładuje
         get_download_links(web_driver, zalaczniki)
@@ -212,7 +215,8 @@ def countdown(steps):
 
 def howmuch():
     """Pyta się użytkownika co ile ma sprawdzać pocztę
-    :return int"""
+    :return int
+    """
     try:
         how_many = input(
             "Co ile minut ma minut ma sprawdzać pocztę Librusa? (min - 20 minut): "
@@ -254,7 +258,7 @@ def main(check):
 
     except:
         web_driver.close()
-         print(
+        print(
             'Najprawdopodbniej coś poszło nie tak i strona się nie załadowała lub przekroczyłeś limit '
             'zapytań do strony więc czekamy chwilkę i próbujemy od nowa')
         time.sleep(30)
