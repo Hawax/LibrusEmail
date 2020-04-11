@@ -6,3 +6,5 @@ Używam chromedrivera v80.
 
 # Każdy może go używać bez zainstalowanego Pythona wystarczy pobrać skompilowany plik .exe i uruchomić go w folderze z "chromedriver.exe"
 
+Zaznaczam że jestem amatorem i wciąż się uczę a to był jednodniowy projekt.
+
