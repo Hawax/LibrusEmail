@@ -1,5 +1,5 @@
 # LibrusEmail
-Skrypt w Pythonie przy użyciu selenium, który odczytuje pocztę za nas. Zapisuje przeczytane tematy i załączniki.
+Skrypt w Pythonie przy użyciu selenium, który odczytuje pocztę w Librusie za nas. Zapisuje przeczytane tematy i załączniki.
 
 Wymagany jest zainstalowany chrome jeśli wskoczy nam error o złej wersji chroma trzeba pobrać webdrivera odpowiadający naszej przeglądarce stąd: https://chromedriver.chromium.org/downloads/version-selection
 Używam chromedrivera v80.
