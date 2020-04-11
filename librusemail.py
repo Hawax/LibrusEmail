@@ -33,16 +33,16 @@ def create_web_driver(headless):
     chrome_options.add_argument('--disable-dev-shm-usage')
     prefs = {
         'download.default_directory':
-        os.path.abspath(os.getcwd() + r'\Zdjecia'),
+            os.path.abspath(os.getcwd() + r'\Zdjecia'),
         "profile.default_content_setting_values.automatic_downloads": 1
     }
     chrome_options.add_experimental_option('prefs', prefs)
-    d_inside = webdriver.Chrome('chromedriver.exe',
-                                chrome_options=chrome_options)
-    d_inside.set_window_size(1366, 968)
-    d_inside.get('https://portal.librus.pl/rodzina/synergia/loguj')
+    web_inside = webdriver.Chrome('chromedriver.exe',
+                                  chrome_options=chrome_options)
+    web_inside.set_window_size(1366, 968)
+    web_inside.get('https://portal.librus.pl/rodzina/synergia/loguj')
 
-    return d_inside
+    return web_inside
 
 
 def make_folder_zdjecia():
@@ -79,24 +79,24 @@ def get_download_links(web_driver, dirname):
         try:
             click_link = web_driver.find_element_by_xpath(
                 '/html/body/div[3]/div[3]/form/div/div/table/tbody/tr/td[2]/table[3]/tbody/tr[{}]/td[2]/a/img'
-                .format(i))
+                    .format(i))
             click_link.click()
             i += 1
-            time.sleep(15)  #czeka aż plik się pobierze
+            time.sleep(15)  # czeka aż plik się pobierze
         except:
             break
 
     # teraz tworzy folder z tematem zajęć w folderze Zdjecia
     try:
         if i >= 3:
-            dirname = clean_dirname(dirname)  #czyści niedozwolone znaki
+            dirname = clean_dirname(dirname)  # czyści niedozwolone znaki
             main_folder = 'Zdjecia'
-            dirname = main_folder + '\\' + dirname[0:40]   #maksymana długość nazwy folderu, bo inaczej coś się bugowało
-                
+            dirname = main_folder + '\\' + dirname[0:40]  # maksymana długość nazwy folderu, bo inaczej coś się bugowało
+
             onlyfiles = [
                 f for f in os.listdir(main_folder)
                 if os.path.isfile(os.path.join(main_folder, f))
-            ]  #tutaj poszukuje plików i kopjuje je do folderu, który zostanie zaraz stworzony
+            ]  # tutaj poszukuje plików i kopjuje je do folderu, który zostanie zaraz stworzony
             print(onlyfiles)
             make_folder_zdjecia()
 
@@ -106,7 +106,7 @@ def get_download_links(web_driver, dirname):
             else:
                 print("Directory ", dirname, " already exists")
 
-            for file in onlyfiles:  #sortuje je do folderu
+            for file in onlyfiles:  # sortuje je do folderu
                 print(file)
                 os.rename(main_folder + '\\' + file, dirname + '\\' + file)
 
@@ -132,7 +132,7 @@ def password_and_username_fill(web_driver, login_inside, haslo_inside):
     input_click2.click()
     time.sleep(10)
 
-    input_element = web_driver  #musi zmienic ramke, bo logowanie jest wsadzone w iframe.
+    input_element = web_driver  # musi zmienic ramke, bo logowanie jest wsadzone w iframe.
     input_element.switch_to_frame('caLoginIframe')
 
     login_click = input_element.find_element_by_xpath(
@@ -158,11 +158,10 @@ def click_on_email_icon(web_driver):
 
 
 def get_messages(web_driver):
-
     linki_url = []
     linki_url_text = []
     for i in range(1, 55):
-        try:  #nie robię tego .format gdyż tak wygląda według mnie czytelniej
+        try:  # nie robię tego .format gdyż tak wygląda według mnie czytelniej
             href_url = web_driver.find_element_by_xpath(
                 "/html/body/div[3]/div[3]/form/div/div/table/tbody/tr/td[2]/table[2]/tbody/tr["
                 + str(i) + "]/td[4]/a").get_attribute('href')
@@ -222,10 +221,10 @@ def howmuch():
             return how_many
         else:
             print('Za mało minut')
-            return howmany()
+            return howmuch()
     except:
         print("Musi to być liczba całkowita")
-        return howmany()
+        return howmuch()
 
 
 def get_answer_headless():
@@ -239,23 +238,24 @@ def get_answer_headless():
         return how_many.lower()
     else:
         print('Musi byc tak lub nie')
-        return headless()
+        return get_answer_headless()
 
 
 def main(check):
     login, haslo = save_creds_and_read()
     web_driver = create_web_driver(
-        check)  #tworzę nowy webdriver gdyż nie chce żeby stał bezczynnie w tle.
-    
+        check)  # tworzę nowy webdriver gdyż nie chce żeby stał bezczynnie w tle.
+
     try:
         password_and_username_fill(web_driver, login, haslo)
         click_on_email_icon(web_driver)
         read_messages(web_driver)
         web_driver.close()
-    
+
     except:
         web_driver.close()
-        print('Najprawdopodbniej coś poszło nie tak i strona się nie załadowała lub przekroczyłeś limit zapytań do strony więc czekamy chwilkę i próbujemy od nowa')
+        print(
+            'Najprawdopodbniej coś poszło nie tak i strona się nie załadowała lub przekroczyłeś limit zapytań do strony więc czekamy chwilkę i próbujemy od nowa')
         time.sleep(30)
         return main(check)
 
