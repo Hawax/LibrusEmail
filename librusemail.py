@@ -13,13 +13,15 @@ def save_creds_and_read():
         with open("login_i_hasło.txt", 'r+') as file:
             login, haslo = file.readlines()
             return login, haslo
+    
     except FileNotFoundError:
         login = input('Login librus: ')
         haslo = input('Haslo librus: ')
-
+        
         with open("login_i_hasło.txt", 'a+') as file:
             file.write(login + '\n')
             file.write(haslo)
+            
         return login, haslo
 
 
@@ -47,12 +49,10 @@ def create_web_driver(headless):
 
 def make_folder_zdjecia():
     execution_path = os.getcwd()
-
     if not os.path.exists(execution_path):
         os.mkdir('Zdjecia')
         print("Directory ", 'Zdjecia', " Created ")
-    else:
-        pass
+    else: pass
 
 
 def clean_dirname(dirname):
@@ -187,8 +187,8 @@ def get_messages(web_driver):
             pass
 
     all = zip(linki_url, linki_url_text
-              )  # tutaj odczytuje poczte i zapisuje załączniki(niestety
-    for url_do_poczty, zalaczniki in all:  # zapisywanie załączników działa niestety tylko w trybie bez headless)
+              )                             # tutaj odczytuje poczte i zapisuje załączniki(niestety
+    for url_do_poczty, zalaczniki in all:   # zapisywanie załączników działa niestety tylko w trybie bez headless)
         web_driver.get(url_do_poczty)
         time.sleep(5)  # czeka aż się strona naładuje
         get_download_links(web_driver, zalaczniki)
