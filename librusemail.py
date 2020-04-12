@@ -226,11 +226,11 @@ def howmuch():
     :return int
     """
     try:
-        how_many = input(
+        how_much = input(
             "Co ile minut ma minut ma sprawdzać pocztę Librusa? (min - 20 minut): "
         )
-        if int(how_many) >= 20:
-            return how_many
+        if int(how_much) >= 20:
+            return how_much
         else:
             print('Za mało minut')
             return howmuch()
